@@ -1,0 +1,147 @@
+(version 1)
+
+(deny default)
+
+(allow file-ioctl
+       (literal "/dev/dtracehelper"))
+
+(allow file-read*
+       (subpath "/Applications/Pond.app")
+       (literal "/Library/Application Support/CrashReporter/SubmitDiagInfo.domains")
+       (literal "/Library/Fonts/Arial Bold Italic.ttf")
+       (literal "/Library/Fonts/Arial Bold.ttf")
+       (literal "/Library/Fonts/Arial Italic.ttf")
+       (literal "/Library/Fonts/Arial.ttf")
+       (literal "/Library/Keychains/System.keychain")
+       (literal "/Library/Preferences/com.apple.HIToolbox.plist")
+       (literal "/Library/Preferences/com.apple.security.plist")
+       (literal "/Users/agl/.aspell.en.prepl")
+       (literal "/Users/agl/.aspell.en.pws")
+       (literal "/Users/agl/.config/enchant")
+       (literal "/Users/agl/.config/enchant/en_US.dic")
+       (literal "/Users/agl/.config/enchant/en_US.exc")
+       (literal "/Users/agl/.config/enchant/enchant.ordering")
+       (literal "/Users/agl/.pond")
+       (literal "/Users/agl/Library/Input Methods")
+       (literal "/Users/agl/Library/Keyboard Layouts")
+       (literal "/Users/agl/Library/Keychains/login.keychain")
+       (literal "/Users/agl/Library/Saved Application State/org.imperialviolet.pond.savedState")
+       (literal "/Users/agl/Library/Saved Application State/org.imperialviolet.pond.savedState/data.data")
+       (literal "/Users/agl/Library/Saved Application State/org.imperialviolet.pond.savedState/restorecount.plist")
+       (literal "/Users/agl/Library/Saved Application State/org.imperialviolet.pond.savedState/windows.plist")
+       (literal "/dev/dtracehelper")
+       (literal "/dev/random")
+       (literal "/dev/urandom")
+       (literal "/private/var/db/mds/messages/se_SecurityMessages")
+       (literal "/private/var/db/mds/system/mdsDirectory.db")
+       (literal "/private/var/db/mds/system/mdsObject.db")
+       (literal "/usr/local/lib/gio/modules")
+       (literal "/usr/local/share/pixmaps")
+       (regex #"^/private/var/folders/[^/]+/[^/]+/C/mds/mdsDirectory\.db$")
+       (regex #"^/private/var/folders/[^/]+/[^/]+/C/mds/mdsObject\.db$")
+       (regex #"^/private/var/folders/[^/]+/[^/]+/C/mds/mds\.lock$")
+       (subpath "/System")
+       (subpath "/usr/share"))
+
+(allow file-read-metadata
+       (literal "/")
+       (literal "/Applications")
+       (literal "/Applications/Pond.app/Contents/Resources/lib/Resources/lib/Resources/lib/aspell-0.60/en_US.multi")
+       (literal "/Library")
+       (literal "/Library/Keychains")
+       (literal "/Users")
+       (literal "/Users/agl")
+       (literal "/Users/agl/Library")
+       (literal "/Users/agl/Library/Autosave Information")
+       (literal "/Users/agl/Library/Keychains")
+       (literal "/Users/agl/Library/Saved Application State")
+       (literal "/etc")
+       (literal "/private")
+       (literal "/private/etc/localtime")
+       (literal "/private/var")
+       (literal "/private/var/db/.AppleSetupDone")
+       (literal "/private/var/folders")
+       (literal "/private/var/folders/cd")
+       (literal "/private/var/folders/cd/13xr0s3s0wlf18zb0y2l4_t00000gn")
+       (literal "/private/var/run/systemkeychaincheck.done")
+       (literal "/var")
+       (regex "^/private/var/folders/[^/]+/[^/]+/C$")
+       (regex "^/private/var/folders/[^/]+/[^/]+/C/mds$")
+       (subpath "/usr/lib"))
+
+(allow file-write*
+       (literal "/Users/agl/Library/Saved Application State/org.imperialviolet.pond.savedState/data.data")
+       (literal "/Users/agl/Library/Saved Application State/org.imperialviolet.pond.savedState/restorecount.plist")
+       (literal "/Users/agl/Library/Saved Application State/org.imperialviolet.pond.savedState/window_2.data")
+       (literal "/Users/agl/Library/Saved Application State/org.imperialviolet.pond.savedState/windows.plist")
+       (regex #"^/private/var/folders/[^/]+/[^/]+/C/mds/mdsDirectory\.db$")
+       (regex #"^/private/var/folders/[^/]+/[^/]+/C/mds/mdsDirectory\.db_$")
+       (regex #"^/private/var/folders/[^/]+/[^/]+/C/mds/mdsObject\.db$")
+       (regex #"^/private/var/folders/[^/]+/[^/]+/C/mds/mdsObject\.db_$"))
+
+(allow file-write-data
+       (literal "/Users/agl/.aspell.en.prepl")
+       (literal "/Users/agl/.aspell.en.pws")
+       (literal "/Users/agl/.config/enchant/en_US.dic")
+       (literal "/Users/agl/.config/enchant/en_US.exc")
+       (literal "/Users/agl/.pond")
+       (literal "/dev/dtracehelper")
+       (regex #"^/private/var/folders/[^/]+/[^/]+/C/mds/mds\.lock$"))
+
+(allow iokit-open
+       (iokit-user-client-class "IOHIDParamUserClient"))
+
+(allow ipc-posix-shm-read-data
+       (ipc-posix-name "/tmp/com.apple.csseed.37")
+       (ipc-posix-name "CFPBS:10A:")
+       (ipc-posix-name "apple.shm.cfprefsd.501")
+       (ipc-posix-name "apple.shm.cfprefsd.daemon")
+       (ipc-posix-name "apple.shm.notification_center")
+       (ipc-posix-name "com.apple.AppleDatabaseChanged")
+       (ipc-posix-name "com.apple.ColorSync.Gen.lock"))
+
+(allow ipc-posix-shm-read-*
+       (ipc-posix-name "com.apple.ColorSync.GenRGB"))
+
+(allow ipc-posix-shm-write-data
+       (ipc-posix-name "CFPBS:10A:")
+       (ipc-posix-name "com.apple.AppleDatabaseChanged")
+       (ipc-posix-name "com.apple.ColorSync.Gen.lock"))
+
+(allow mach-lookup
+       (global-name "com.apple.CoreServices.coreservicesd")
+       (global-name "com.apple.FontServer")
+       (global-name "com.apple.SecurityServer")
+       (global-name "com.apple.cfprefsd.agent")
+       (global-name "com.apple.cfprefsd.daemon")
+       (global-name "com.apple.coreservices.appleevents")
+       (global-name "com.apple.coreservices.launchservicesd")
+       (global-name "com.apple.distributed_notifications@Uv3")
+       (global-name "com.apple.dock.server")
+       (global-name "com.apple.ocspd")
+       (global-name "com.apple.pasteboard.1")
+       (global-name "com.apple.system.logger")
+       (global-name "com.apple.system.notification_center")
+       (global-name "com.apple.system.opendirectoryd.libinfo")
+       (global-name "com.apple.system.opendirectoryd.membership")
+       (global-name "com.apple.tsm.uiserver")
+       (global-name "com.apple.window_proxies")
+       (global-name "com.apple.windowserver.active"))
+
+(allow mach-register
+       (local-name "com.apple.CFPasteboardClient")
+       (local-name "com.apple.coredrag")
+       (local-name "com.apple.tsm.portname"))
+
+(allow network-inbound
+       (local tcp "*:*")
+       (local tcp "localhost:*"))
+
+(allow network-outbound
+       (remote tcp "localhost:9050")
+       (remote tcp "localhost:9150"))
+
+(allow process-exec
+       (literal "/Applications/Pond.app/Contents/MacOS/Pond.bin"))
+
+(allow sysctl-read)

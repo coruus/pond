@@ -1,0 +1,106 @@
+(version 1)
+
+(deny default)
+
+;; Note that "system.sb" is pretty permissive...
+(import "system.sb")
+
+;; Utility functions (adapted from WebKit2/Resources/PlugInSandboxProfiles/com.apple.WebKit.plugin-common.sb)
+(define (home-literal home-relative-literal)
+    (literal (string-append (param "HOME_DIR") home-relative-literal)))
+(define (home-regex home-relative-regex)
+    (regex (string-append "^" (regex-quote (param "HOME_DIR")) home-relative-regex)))
+
+(define (home-library-regex home-library-relative-regex)
+    (regex (string-append "^" (regex-quote (param "HOME_LIBRARY_DIR")) home-library-relative-regex)))
+(define (home-library-subpath home-library-relative-subpath)
+    (subpath (string-append (param "HOME_LIBRARY_DIR") home-library-relative-subpath)))
+(define (home-library-literal home-library-relative-literal)
+    (literal (string-append (param "HOME_LIBRARY_DIR") home-library-relative-literal)))
+
+
+;; Pond-specific
+(allow file*
+   (home-regex #"/\.pond[^/]*$"))
+(allow file-read*
+   (subpath "/Applications/Pond.app"))
+
+;; Security framework (and related)
+(allow mach-lookup (global-name "com.apple.ocspd"))
+(allow file*
+       (regex #"^/private/var/folders/[^/]+/[^/]+/C/mds/mds(Object|Directory)\.db_?$")
+       (regex #"^/private/var/folders/[^/]+/[^/]+/C/mds/mds\.lock$"))
+(allow file-read*
+       (literal "/Library/Preferences/com.apple.security.plist")
+       (literal "/Library/Keychains/System.keychain")
+       (subpath "/private/var/db/mds"))
+(allow ipc-posix-shm-read* ipc-posix-shm-write-data
+       (ipc-posix-name "com.apple.AppleDatabaseChanged"))
+(allow ipc-posix-shm-read-data
+       (ipc-posix-name-regex #"^/tmp/com\.apple\.csseed\.[0-9]+$"))
+
+;; UI
+(allow file-read*
+       (regex #"^/Library/Fonts/Arial( (Bold( Italic)?|Italic))?\.ttf$")
+       (literal "/Library/Preferences/com.apple.HIToolbox.plist")
+       (home-library-literal "/Input Methods")
+       (home-library-literal "/Keyboard Layouts")
+       (literal "/dev/random")
+       (literal "/dev/urandom"))
+
+(allow file-read-metadata
+       (home-literal "")
+       (home-literal "/Library")
+       (literal "/private")
+       (literal "/private/var/folders")
+       (literal "/private/var/run/systemkeychaincheck.done")
+; TODO: This next line is very non-minimal.
+       (subpath "/private/var/folders"))
+
+(allow iokit-open
+       (iokit-user-client-class "IOHIDParamUserClient"))
+
+(allow ipc-posix-shm*
+       (ipc-posix-name-regex #"CFPBS:[0-9A-F][0-9A-:$")
+       (ipc-posix-name "com.apple.AppleDatabaseChanged")
+       (ipc-posix-name "com.apple.ColorSync.Gen.lock"))
+
+(allow ipc-posix-shm-read*
+       (ipc-posix-name "com.apple.ColorSync.GenRGB"))
+
+(allow mach-lookup
+       (global-name "com.apple.CoreServices.coreservicesd")
+       (global-name "com.apple.FontServer")
+       (global-name "com.apple.SecurityServer")
+       (global-name "com.apple.coreservices.launchservicesd")
+       (global-name "com.apple.dock.server")
+       (global-name "com.apple.ocspd")
+       (global-name "com.apple.pasteboard.1")
+       (global-name "com.apple.tsm.uiserver")
+       (global-name "com.apple.window_proxies")
+       (global-name "com.apple.windowserver.active"))
+
+(allow mach-register
+       (local-name "com.apple.CFPasteboardClient")
+       (local-name "com.apple.coredrag")
+       (local-name "com.apple.tsm.portname"))
+
+;; Tor
+(allow network-outbound
+       (remote tcp "localhost:9050")
+       (remote tcp "localhost:9150"))
+
+(allow network-inbound
+       (local tcp "localhost:*"))
+
+;; Seems to be necessary for Security?
+(allow network-bind
+       (local tcp6 "localhost:*"))
+
+(allow mach-lookup
+       (global-name "com.apple.coreservices.appleevents")
+       ; TODO: What's the Uv3? Should this be a regex??
+       (global-name "com.apple.distributed_notifications@Uv3"))
+
+(allow process-exec
+       (literal "/Applications/Pond.app/Contents/MacOS/Pond.bin"))
