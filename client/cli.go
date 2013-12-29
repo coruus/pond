@@ -1,5 +1,3 @@
-// +build !darwin
-
 package main
 
 import (
@@ -21,12 +19,17 @@ import (
 	"code.google.com/p/goprotobuf/proto"
 	"github.com/agl/pond/client/disk"
 	"github.com/agl/pond/client/system"
-	"github.com/agl/pond/client/tpm"
 	"github.com/agl/pond/panda"
 	pond "github.com/agl/pond/protos"
 )
 
 const haveCLI = true
+
+const (
+	tpmIntroMsg      = "It's very difficult to erase information on modern computers so Pond tries to use the TPM chip if possible."
+	tpmPresentMsg    = "Your computer appears to have a TPM chip. You'll need tcsd (the TPM daemon) running in order to use it."
+	tpmNotPresentMsg = "Your computer does not appear to have a TPM chip. Without one, it's possible that someone in physical possession of your computer and passphrase could extract old messages that should have been deleted. Using a computer with a TPM is strongly preferable until alternatives can be implemented."
+)
 
 type cliClient struct {
 	client
@@ -384,57 +387,7 @@ func (c *cliClient) createPassphraseUI() (string, error) {
 		}
 		c.Printf("%s Passphrases don't match. Please start over\n", termInfoPrefix)
 	}
-
-}
-
-func (c *cliClient) createErasureStorage(pw string, stateFile *disk.StateFile) error {
-	c.Printf("%s %s\n", termInfoPrefix, tpmIntroMsg)
-
-	present := tpm.Present()
-	if !present {
-		c.Printf("%s\n", termErrPrefix, tpmNotPresentMsg)
-	} else {
-		c.Printf("%s %s\n", termInfoPrefix, tpmPresentMsg)
-	}
-
-ConfigureLoop:
-	for present {
-		c.term.SetPrompt("Try to configure TPM (y/n)> ")
-
-	PromptLoop:
-		for {
-			line, err := c.term.ReadLine()
-			if err != nil {
-				return err
-			}
-			switch line {
-			case "y", "yes", "Yes":
-				break PromptLoop
-			case "n", "no", "No":
-				break ConfigureLoop
-			}
-		}
-
-		tpm := disk.TPM{
-			Log: func(format string, args ...interface{}) {
-				msg := fmt.Sprintf(format, args...)
-				c.Printf("%s\n", terminalEscape(msg, false))
-			},
-			Rand: c.rand,
-		}
-
-		stateFile.Erasure = &tpm
-		if err := stateFile.Create(pw); err != nil {
-			c.Printf("%s Setup failed with error: %s\n", termErrPrefix, terminalEscape(err.Error(), false))
-		} else {
-			c.Printf("%s TPM in use for this statefile\n", termInfoPrefix)
-			return nil
-		}
-	}
-
-	c.Printf("%s TPM will not be used for this statefile\n", termErrPrefix)
-	stateFile.Erasure = nil
-	return stateFile.Create(pw)
+	return "", nil
 }
 
 func (c *cliClient) createAccountUI() error {
