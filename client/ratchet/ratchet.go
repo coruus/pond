@@ -32,7 +32,7 @@ const (
 	nonceInHeaderOffset = 4 + 4 + 32
 	// maxMissingMessages is the maximum number of missing messages that
 	// we'll keep track of.
-	maxMissingMessages = 2048
+	maxMissingMessages = 4
 )
 
 // Ratchet contains the per-contact, crypto state.
